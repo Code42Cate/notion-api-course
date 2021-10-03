@@ -1,2 +1,1 @@
-This is the code repository for my free Notion API Course that you can find here: [Course](https://safelyy.notion.site/Notion-API-Course-979b30c25adc4c7c8fa5391614162403)
-
+This is the code repository for my free Notion API Course that you can find here: [Course](https://jscholz.gumroad.com/l/OOTMc)
