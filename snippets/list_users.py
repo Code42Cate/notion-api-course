@@ -31,7 +31,7 @@ def list_users():
                                 'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
         # If the request was not successful, we print the error and return the user array
-        if response.status_code != 200:
+        if not response.ok:
             print('Error:', response.status_code)
             print('Error:', response.content)
             return users
@@ -53,12 +53,12 @@ def list_users():
 
 if __name__ == "__main__":
 
-    # call function to get users
+    # Call function to get users
     users = list_users()
 
-    # pretty print
-    print(json.dumps(users, indent=2))
+    # Pretty print
+    print(json.dumps(users, indent=4))
 
-    # example iteration over user array
+    # Example iteration over user array
     for user in users:
         print(user['id'], user['name'])

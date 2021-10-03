@@ -9,14 +9,14 @@ load_dotenv()
 NOTION_TOKEN = os.getenv('NOTION_SECRET', '')
 
 
-def delete_page(notion_id: str):
+def delete_block(notion_id: str):
 
     # The actual API request
     response = requests.delete('https://api.notion.com/v1/blocks/'+notion_id, headers={
         'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
     # If the request was not successful, we print the error and return
-    if response.status_code != 200:
+    if not response.ok:
         print('Error:', response.status_code)
         print('Error:', response.content)
         return
@@ -28,11 +28,11 @@ def delete_page(notion_id: str):
 
 if __name__ == "__main__":
 
-    # TODO: Replace this notion_id with the ID of the page (row) you want to delete
-    # You can use the recurring_task project to generate a new page
-    # And then extract delete the new page again with this script
-    page_id = 'TODO'
+    # TODO: Replace this notion_id with the ID of the block that you want to delete
+    # You can use create_block.py to create a block and get its ID
+    # And then delete the block again
+    block_id = 'TODO'
 
     # Call function to delete page
-    data = delete_page(page_id)
+    data = delete_block(block_id)
     print(json.dumps(data, indent=4))

@@ -39,7 +39,7 @@ def list_databases():
             'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
         # If the request was not successful, we print the error and return the database array
-        if response.status_code != 200:
+        if not response.ok:
             print('Error:', response.status_code)
             print('Error:', response.content)
             return databases
@@ -50,7 +50,7 @@ def list_databases():
         has_more = data['has_more']
         next_cursor = data['next_cursor']
 
-        # Extend our user array with the new results
+        # Extend our databases array with the new results
         databases.extend(data['results'])
 
         # If you want to see the complete response, uncomment the following line

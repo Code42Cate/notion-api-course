@@ -46,7 +46,7 @@ def create_database(parent_id: str):
         'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
    # If the request was not successful, we print the error and return
-    if response.status_code != 200:
+    if not response.ok:
         print('Error:', response.status_code)
         print('Error:', response.content)
         return

@@ -9,57 +9,36 @@ load_dotenv()
 NOTION_TOKEN = os.getenv('NOTION_SECRET', '')
 
 
-def query_filter(notion_id: str):
+def query_sort(notion_id: str):
 
-    # You can have a single filter
-    # More information about filter: https://developers.notion.com/reference/post-database-query#post-database-query-filter
+    # You can add have multiple sort criteria in series
+    # More information about sorts: https://developers.notion.com/reference/post-database-query#post-database-query-sort
     payload = {
-        'filter':
-            {
-                'property': 'Fact',  # Column name
-                'text': {
-                    'contains': 'Wikipedia'  # filter and value to filter for
-                }
-            }
+        'sorts': [{
+            # Column name in Notion, this example works with the database from the recurring_tasks project
+            'property': 'Fact',
+            'timestamp': 'created_time',  # Or last_edited_time
+            'direction': 'descending'  # Or descending
+        }]
     }
 
-    # Or you can have multiple filter:
-    """
-    payload = {
-        'filter':
-        {
-            'and': [
-                {
-                    'property': 'Seen',
-                    'checkbox': {
-                        'equals': False
-                    }
-                },
-                {
-                    'property': 'Yearly visitor count',
-                    'number': {
-                        'greater_than': 1000000
-                    }
-                }
-            ]
-        }
-    }
-    """
     # The actual API request
     response = requests.post('https://api.notion.com/v1/databases/{}/query'.format(notion_id), json=payload, headers={
         'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
     # If the request was not successful, we print the error and return
-    if response.status_code != 200:
+    if not response.ok:
         print('Error:', response.status_code)
         print('Error:', response.content)
         return
 
     # Parse the response as JSON
     data = response.json()
-    return data['results']
+
     # If you want to see the complete response, uncomment the following line
-    print(json.dumps(data, indent=4))
+    # print(json.dumps(data, indent=4))
+
+    return data['results']
 
 
 if __name__ == "__main__":
@@ -71,7 +50,7 @@ if __name__ == "__main__":
     database_id = 'TODO'
 
     # Call function to query the database
-    rows = query_filter(database_id)
+    rows = query_sort(database_id)
 
     # Something failed:(
     if rows is None:

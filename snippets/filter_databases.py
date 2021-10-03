@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+
 # Load the .env file
 load_dotenv()
 
@@ -9,15 +10,18 @@ load_dotenv()
 NOTION_TOKEN = os.getenv('NOTION_SECRET', '')
 
 
-def list_pages():
+def filter_databases():
     has_more = True
-    pages = []
+    databases = []
     next_cursor = None
 
-    # This is the filter for the query, you can also use value: database if you want to get all databases instead!
+    # This is the filter for the query, you can also use value: page if you want to get all pages instead!
     payload = {
+        # This will filter for the database title, you can remove it if you don't want to filter
+        # All databases will get returned that start with 'title
+        'query': 'title',
         'filter': {
-            'value': 'page',
+            'value': 'database',
             'property': 'object'
         }
     }
@@ -38,11 +42,11 @@ def list_pages():
         response = requests.post('https://api.notion.com/v1/search', params, json=payload, headers={
             'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
-        # If the request was not successful, we print the error and return the page array
-        if response.status_code != 200:
+        # If the request was not successful, we print the error and return the database array
+        if not response.ok:
             print('Error:', response.status_code)
             print('Error:', response.content)
-            return pages
+            return databases
 
         # Parse the response as JSON
         data = response.json()
@@ -51,22 +55,23 @@ def list_pages():
         next_cursor = data['next_cursor']
 
         # Extend our user array with the new results
-        pages.extend(data['results'])
+        databases.extend(data['results'])
 
         # If you want to see the complete response, uncomment the following line
         # print(json.dumps(data, indent=4))
 
-    return pages
+    return databases
 
 
 if __name__ == "__main__":
 
-    # Call function to get pages
-    pages = list_pages()
+    # call function to get users
+    databases = filter_databases()
 
-    # Pretty print
-    # print(json.dumps(databases, indent=2))
+    # pretty print
+    print(json.dumps(databases, indent=4))
 
-    # Example iteration over page array
-    for page in pages:
-        print(page['url'], page['id'], page['object'])
+    # example iteration over user array
+    for database in databases:
+        title = ''.join([t['plain_text'] for t in database['title']])
+        print(database['url'], title)

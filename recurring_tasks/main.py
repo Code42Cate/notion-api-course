@@ -90,7 +90,12 @@ if __name__ == '__main__':
     # Use list_databases.py to get the id of your database
     # Your database should look like this: https://safelyy.notion.site/f1f5071d8d2a47aa9ddc02b8aad3f6bc
     # You can duplicate it, create one manually or try to create one with the API. See create_database.py for an example!
-    database_id = 'f1f5071d-8d2a-47aa-9ddc-02b8aad3f6bc'
-    while True:
-        post_task(database_id)
-        time.sleep(5)
+    database_id = 'TODO'
+
+    post_task(database_id)
+
+    # In a perfect scenario you would use something like cron or a scheduler to run this script in your desired interval
+    # See the Render deployment section for more information
+    # while True:
+    #    post_task(database_id)
+    #    time.sleep(60*60*24)

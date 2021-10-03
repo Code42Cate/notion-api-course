@@ -9,34 +9,26 @@ load_dotenv()
 NOTION_TOKEN = os.getenv('NOTION_SECRET', '')
 
 
-def query_sort(notion_id: str):
+def query(notion_id: str):
 
-    # You can add have multiple sort criteria in series
-    # More information about sorts: https://developers.notion.com/reference/post-database-query#post-database-query-sort
-    payload = {
-        'sorts': [{
-            # Column name in Notion, this example works with the database from the recurring_tasks project
-            'property': 'Fact',
-            'timestamp': 'created_time',  # Or last_edited_time
-            'direction': 'descending'  # Or descending
-        }]
-    }
-
+    # This is without pagination! To figure out how to do pagination, take a look at the list_databases example
     # The actual API request
-    response = requests.post('https://api.notion.com/v1/databases/{}/query'.format(notion_id), json=payload, headers={
+    response = requests.post('https://api.notion.com/v1/databases/{}/query'.format(notion_id), headers={
         'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
     # If the request was not successful, we print the error and return
-    if response.status_code != 200:
+    if not response.ok:
         print('Error:', response.status_code)
         print('Error:', response.content)
         return
 
     # Parse the response as JSON
     data = response.json()
-    return data['results']
+
     # If you want to see the complete response, uncomment the following line
     print(json.dumps(data, indent=4))
+
+    return data['results']
 
 
 if __name__ == "__main__":
@@ -44,11 +36,10 @@ if __name__ == "__main__":
     # ID of the notion row/page
     # You can get the ID by listing all databases first (list_databases.py)
     # You can not copy the id from the app!
-    # I suggest using the same database as in the recurring_tasks project
     database_id = 'TODO'
 
     # Call function to query the database
-    rows = query_sort(database_id)
+    rows = query(database_id)
 
     # Something failed:(
     if rows is None:

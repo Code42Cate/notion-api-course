@@ -16,7 +16,7 @@ def download_file(notion_id: str, property_name: str):
                             'Authorization': 'Bearer '+NOTION_TOKEN, 'Notion-Version': '2021-08-16'})
 
     # If the request was not successful, we print the error and return
-    if response.status_code != 200:
+    if not response.ok:
         print('Error:', response.status_code)
         print('Error:', response.content)
         return
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # The name of the column in your database. Same as in the app! You can also get the properties by retrieving the database (retrieve_database.py)
     property_name = 'TODO'
 
-    # call function to download file
+    # Call function to download file
     users = download_file(row_notion_id, property_name)
 
-    # file(s) should now be saved in the same directory where you executed this script
+    # File(s) should now be saved in the same directory where you executed this script
